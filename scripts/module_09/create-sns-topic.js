@@ -1,19 +1,23 @@
 // Imports
-const AWS = require('aws-sdk')
+const AWS = require("aws-sdk");
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+AWS.config.update({ region: "eu-central-1" });
 
 // Declare local variables
-// TODO: Create sns object
-const topicName = 'hamster-topic'
+const sns = new AWS.SNS();
+const topicName = "hamster-topic";
 
-createTopic(topicName)
-.then(data => console.log(data))
+createTopic(topicName).then(data => console.log(data));
 
-function createTopic (topicName) {
-  // TODO: Create params const
+function createTopic(topicName) {
+  const params = {
+    Name: topicName
+  };
 
   return new Promise((resolve, reject) => {
-    // TODO: Create topic
-  })
+    sns.createTopic(params, (err, data) => {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
 }

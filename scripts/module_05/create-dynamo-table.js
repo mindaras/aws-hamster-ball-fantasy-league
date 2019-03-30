@@ -1,19 +1,40 @@
 // Imports
-const AWS = require('aws-sdk')
+const AWS = require("aws-sdk");
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+AWS.config.update({ region: "eu-central-1" });
 
 // Declare local variables
-// TODO: Declare dynamoDB object
+const dynamoDB = new AWS.DynamoDB();
 
-createTable('hamsters')
-.then(() => createTable('races'))
-.then(data => console.log(data))
+createTable("hamsters")
+  .then(() => createTable("races"))
+  .then(data => console.log(data));
 
-function createTable (tableName) {
-  // TODO: Declare params for createTable
+function createTable(tableName) {
+  const params = {
+    TableName: tableName,
+    AttributeDefinitions: [
+      {
+        AttributeName: "id",
+        AttributeType: "N"
+      }
+    ],
+    KeySchema: [
+      {
+        AttributeName: "id",
+        KeyType: "HASH"
+      }
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 5,
+      WriteCapacityUnits: 5
+    }
+  };
 
   return new Promise((resolve, reject) => {
-    // TODO: Call createTable function
-  })
+    dynamoDB.createTable(params, (err, data) => {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
 }
